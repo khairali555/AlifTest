@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AlifTestTask.Controllers
 {
+    [Authorize]
+    [ApiController]    
     [Route("api/[controller]")]
     public class ApiController : Controller
     {
@@ -21,7 +23,7 @@ namespace AlifTestTask.Controllers
             _transactionsService= transactionsService;
             _accountsService= accountsService;
         }
-
+        [AllowAnonymous]
         [HttpPost("add_user")]
         public async Task<ActionResult> AddUser(UserWithAccount data)
         {

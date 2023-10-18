@@ -1,8 +1,7 @@
 using AlifTestTask.DB;
 using AlifTestTask.Models;
 using AlifTestTask.Services;
-using FlakeyBit.DigestAuthentication.AspNetCore;
-using FlakeyBit.DigestAuthentication.Implementation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
@@ -16,14 +15,43 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AlifDB>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IUsernameHashedSecretProvider, UserAuthHash>();
-builder.Services.AddAuthentication("Digest")
-                    .AddDigestAuthentication(DigestAuthenticationConfiguration.Create("VerySecret", "some-realm", 60, true, 20));
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+#region Configure Swagger  
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BasicAuth", Version = "v1" });
+    c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "basic",
+        In = ParameterLocation.Header,
+        Description = "Basic Authorization header using the Bearer scheme."
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "basic"
+                                }
+                            },
+                            new string[] {}
+                    }
+                });
+});
+#endregion
+
+builder.Services.AddAuthentication("BasicAuthentication")
+.AddScheme<AuthenticationSchemeOptions, AuthHandler>("BasicAuthentication", null);
+
+builder.Services.AddScoped<AuthService>();          
 
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<TransactionsService>();

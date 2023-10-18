@@ -7,8 +7,6 @@ D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\AlifTestTask.dll
 D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\AlifTestTask.pdb
 D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\Azure.Core.dll
 D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\Azure.Identity.dll
-D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\FlakeyBit.DigestAuthentication.AspNetCore.dll
-D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\FlakeyBit.DigestAuthentication.Implementation.dll
 D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
 D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\MY_PROJECTS\AspNetProjects\AlifTestTask\bin\Debug\net7.0\Microsoft.Data.SqlClient.dll

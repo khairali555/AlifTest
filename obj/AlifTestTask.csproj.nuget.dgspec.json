@@ -45,10 +45,6 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "FlakeyBit.DigestAuthentication.AspNetCore": {
-              "target": "Package",
-              "version": "[2023.7.16.5, )"
-            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.5, )"
