@@ -16,24 +16,31 @@ namespace AlifTestTask.Controllers
         private UsersService _usersService;
         private TransactionsService _transactionsService;
         private AccountsService _accountsService;
-        public ApiController(AlifDB db,UsersService usersService,TransactionsService transactionsService,AccountsService accountsService) 
+        private readonly ILogger<ApiController> _log;
+        public ApiController(AlifDB db,UsersService usersService,TransactionsService transactionsService,AccountsService accountsService, ILogger<ApiController> log) 
         {
             _db= db;
             _usersService= usersService;
             _transactionsService= transactionsService;
             _accountsService= accountsService;
+            _log = log;
         }
         [AllowAnonymous]
         [HttpPost("add_user")]
         public async Task<ActionResult> AddUser(UserWithAccount data)
         {
-            if (data == null) return BadRequest();
+            if (data == null) 
+            {
+                _log.LogDebug("invalid userDto");
+                return BadRequest("invalid userDto"); 
+            }
             try
             {
                var res = await _usersService.CreateUser(data);
                 return Ok(res);
             }catch (Exception ex) 
             {
+                _log.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -73,6 +80,7 @@ namespace AlifTestTask.Controllers
             }
             catch (Exception ex)
             {
+                _log.LogError(ex.Message);
                 return BadRequest("Balance not found.");
             }
 
@@ -89,6 +97,7 @@ namespace AlifTestTask.Controllers
             }
             catch (Exception ex)
             {
+                _log.LogError(ex.Message);
                 return BadRequest("Error on Get Info.");
             }
 

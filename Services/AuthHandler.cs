@@ -39,6 +39,7 @@ namespace AlifTestTask.Services
 
                 if (!_authService.CheckUser(username, hash))
                 {
+                    Logger.LogDebug($"Invalid username or passrword {hash}");
                     throw new ArgumentException($"Invalid username or passrword {hash}");
                 }
             }

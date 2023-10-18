@@ -5,9 +5,11 @@ namespace AlifTestTask.Services
     public class AuthService
     {
         AlifDB _db;
-        public AuthService(AlifDB db) 
+        private readonly ILogger<AuthService> _log;
+        public AuthService(AlifDB db, ILogger<AuthService> log)
         {
             _db = db;
+            _log = log;
         }
         public bool CheckUser(string phone, string hash)
         {
@@ -15,7 +17,12 @@ namespace AlifTestTask.Services
                 var user = _db.Users.FirstOrDefault(x => x.Phone == phone);
 
                 var userhash = Helper.CreateSHA1Hash(user.Phone+user.Password);
-                if (userhash == hash) return true;
+                if (userhash == hash)
+                {
+                    _log.LogDebug($"User {user.Phone} is checked.");
+                    return true;
+                }
+                _log.LogDebug($"User {user.Phone} ended with error.");
                 return false;
             
         }

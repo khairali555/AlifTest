@@ -7,9 +7,12 @@ namespace AlifTestTask.Services
     public class TransactionsService
     {
         AlifDB _db;
-        public TransactionsService(AlifDB db) 
-        { 
+        private readonly ILogger<TransactionsService> _log;
+
+        public TransactionsService(AlifDB db, ILogger<TransactionsService> log)
+        {
             _db = db;
+            _log = log;
         }
 
         public async Task<Transactions> SendPayment(int accountId,decimal amount,int tranType)
@@ -28,6 +31,7 @@ namespace AlifTestTask.Services
                 
                 if (user.UserType == (int)Enums.UserTypes.Identified && (account.Balance + amount) > 100000)
                 {
+                    _log.LogDebug($"balance of user {user.Phone} more then 100 000");
                     tran.ErrorStatusCode = (int)Enums.TransactionerrorTypes.BalanceError;
                     tran.Error = Enums.TransactionerrorTypes.BalanceError.GetDescription();
                     tran.Status = (int)Enums.TransactionerrorTypes.CreditError;
@@ -35,6 +39,7 @@ namespace AlifTestTask.Services
                 }
                 if (user.UserType == (int)Enums.UserTypes.UnnIdentified && (account.Balance + amount) > 10000)
                 {
+                    _log.LogDebug($"balance of user {user.Phone} more then 10 000");
                     tran.ErrorStatusCode = (int)Enums.TransactionerrorTypes.BalanceError;
                     tran.Error = Enums.TransactionerrorTypes.BalanceError.GetDescription();
                     tran.Status = (int)Enums.TransactionerrorTypes.CreditError;
@@ -50,9 +55,11 @@ namespace AlifTestTask.Services
                 _db.Accounts.Update(account);
                 await _db.Transactions.AddAsync(tran);
                 await _db.SaveChangesAsync();
+                _log.LogDebug($"balance of user {user.Phone} added successfully.");
                 return  tran;
             }catch (Exception ex) 
             {
+                _log.LogError(ex.Message);
                 tran.ErrorStatusCode = (int)Enums.TransactionerrorTypes.BalanceError;
                 tran.Error = Enums.TransactionerrorTypes.BalanceError.GetDescription();
                 tran.Status = (int)Enums.TransactionerrorTypes.CreditError;
@@ -89,6 +96,7 @@ namespace AlifTestTask.Services
             }
             catch (Exception ex)
             {
+                _log.LogError(ex.Message);
                 return null;
             }
 
